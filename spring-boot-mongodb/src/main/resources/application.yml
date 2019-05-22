@@ -1,0 +1,9 @@
+# server port
+server:
+  port: 1010
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://test:123456@127.0.0.1:27017/test
+
