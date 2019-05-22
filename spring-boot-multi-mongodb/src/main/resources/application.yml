@@ -1,0 +1,12 @@
+# server port
+server:
+  port: 1010
+
+mongodb:
+  primary:
+    uri: mongodb://test:123456@127.0.0.1:27017/test
+    database: test
+
+  secondary:
+    database: test
+    uri: mongodb://test:123456@127.0.0.1:27018/test
