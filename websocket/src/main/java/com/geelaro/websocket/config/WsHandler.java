@@ -8,27 +8,32 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 @Component
 public class WsHandler extends AbstractWebSocketHandler {
 
-    private static final HashSet<WebSocketSession> SESSIONS_SET;
+    private static CopyOnWriteArraySet<WebSocketSession> SESSIONS_SET;
 
     static {
-        SESSIONS_SET = new HashSet<>();
+        SESSIONS_SET = new CopyOnWriteArraySet<>();
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-
         Message msg = JSONObject.parseObject(payload, Message.class);
         msg.setDate(new Date());
         System.out.println(session.getId() + "==接收到的数据：" + payload);
         Thread.sleep(2000);
-        session.sendMessage(new TextMessage(JSONObject.toJSONStringWithDateFormat(msg, "yyyy-MM-dd HH:mm:ss")));
+        try {
+            session.sendMessage(new TextMessage(JSONObject.toJSONStringWithDateFormat(msg, "yyyy-MM-dd HH:mm:ss")));
+        } catch (IOException e){
+            System.out.println(session.getId()+" 当前连接已断开");
+        }
 
     }
 
